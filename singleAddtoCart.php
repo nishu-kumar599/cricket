@@ -4,11 +4,12 @@ session_start();
 include "db_connection.php";
 $ip_add = $_SERVER['REMOTE_ADDR'];
 $_SESSION['ip_add'] = $ip_add;
+
 if (isset($_POST["singleaddToCart"])) {
 
-
+    $quantity = $_POST['quantity'];
     $p_id = $_POST["proId"];
-
+    $total_amount = $_POST["total_amount"];
 
     if (isset($_SESSION["uid"])) {
 
@@ -22,8 +23,8 @@ if (isset($_POST["singleaddToCart"])) {
             exit();
         } else {
             $sql = "INSERT INTO `cart`
-			(`p_id`, `ip_add`, `user_id`, `qty`) 
-			VALUES ('$p_id','$ip_add','$user_id','1')";
+			(`p_id`, `ip_add`, `user_id`, `qty`,`Total_amount`) 
+			VALUES ('$p_id','$ip_add','$user_id','$quantity','$total_amount')";
             if (mysqli_query($conn, $sql)) {
                 echo json_encode(['success' => true, 'message' => 'Product is Added..!']);
                 exit();
@@ -38,17 +39,13 @@ if (isset($_POST["singleaddToCart"])) {
 
         }
         $sql = "INSERT INTO `cart`
-			(`p_id`, `ip_add`, `user_id`, `qty`) 
-			VALUES ('$p_id','$ip_add','-1','1')";
+			(`p_id`, `ip_add`, `user_id`, `qty`,`Total_amount`) 
+			VALUES ('$p_id','$ip_add','-1','$quantity','$total_amount')";
         if (mysqli_query($conn, $sql)) {
             echo json_encode(['success' => true, 'message' => 'Product added to cart successfully!']);
             exit();
         }
 
     }
-
-
-
-
 }
 ?>

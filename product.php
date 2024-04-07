@@ -229,7 +229,8 @@
 								<i class="fa fa-minus"></i>
 							</button>
 						</div>
-						<input type="text" class="form-control bg-secondary text-light text-center quantity" value="1">
+						
+						<input type="text" class=" form-control w-20 text-center text-light bg-secondary quantity"  min="0" max="4" value="1" data-product-id="' . $row['product_id'] . '">
 						<div class="input-group-btn">
 							<button class="btn btn-danger btn-plus qty-up">
 								<i class="fa fa-plus"></i>
@@ -237,7 +238,7 @@
 						</div>
 					      </div>
 								<div class="btn-group" style="margin-top: 15px">
-								<button class="add-to-cart-btn btn btn-danger block2-btn-towishlist" pid="' . $row['product_id'] . '" data-id="' . $row['product_id'] . '" id="product" onclick="addToCart(this)">
+								<button class="add-to-cart-btn btn btn-danger block2-btn-towishlist" pid="' . $row['product_id'] . '" data-id="' . $row['product_id'] . '" data-product-price="' . $row['Discount_price'] . '" id="product" onclick="productAddToCart(this)">
 								<i class="fa fa-shopping-cart"></i> add to cart</button>
                                 </div>
 							</div>
@@ -304,13 +305,15 @@
 				autoplaySpeed: 2000,
 			});
 		});
-		function addToCart(element) {
+		function productAddToCart(element) {
 			var productId = $(element).data("id");
-
+			var total_amount = $(element).data('product-price');
+			var quantityInput = $('.quantity[data-product-id="' + productId + '"]');
+			var quantity = quantityInput.val();
 			$.ajax({
 				url: 'singleAddtoCart.php', // The PHP file that processes the add to cart action
 				type: 'POST',
-				data: { singleaddToCart: true, proId: productId },
+				data: { singleaddToCart: true, proId: productId, total_amount: total_amount, quantity: quantity },
 				success: function (response) {
 					// Parse the JSON response from the server
 					var data = JSON.parse(response);

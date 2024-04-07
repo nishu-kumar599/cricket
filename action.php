@@ -111,7 +111,7 @@ if (isset($_POST["getProduct"])) {
                         
                     </div>
                     <div class='add-to-cart'>
-                        <button pid='$pro_id' id='product' class='add-to-cart-btn ' href='#'><i class='fa fa-shopping-cart'></i> add to cart</button>
+                        <button pid='$pro_id' id='product' total_amount='$Discount_price' class='add-to-cart-btn ' href='#'><i class='fa fa-shopping-cart'></i> add to cart</button>
                     </div>
                 </div>
             </div>
@@ -183,7 +183,7 @@ if (isset($_POST["get_seleted_Category"]) || isset($_POST["selectBrand"]) || iss
                       
                     </div>
                     <div class='add-to-cart'>
-                        <button pid='$pro_id' id='product' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> add to cart</button>
+                        <button pid='$pro_id' id='product' total_amount='$Discount_price' class='add-to-cart-btn'><i class='fa fa-shopping-cart'></i> add to cart</button>
                     </div>
                 </div>
             </div>
@@ -196,10 +196,8 @@ if (isset($_POST["get_seleted_Category"]) || isset($_POST["selectBrand"]) || iss
 
 
 if (isset($_POST["addToCart"])) {
-
-
 	$p_id = $_POST["proId"];
-
+	$total_amount = $_POST["total_amount"];
 
 	if (isset($_SESSION["uid"])) {
 
@@ -209,24 +207,14 @@ if (isset($_POST["addToCart"])) {
 		$run_query = mysqli_query($conn, $sql);
 		$count = mysqli_num_rows($run_query);
 		if ($count > 0) {
-			echo "
-				<div class='alert alert-warning'>
-						<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
-						<b>Product is already added into the cart Continue Shopping..!</b>
-				</div>
-			";
+			echo json_encode(['success' => true, 'message' => 'Product is already added into the cart Continue Shopping..!']);
 			exit();
 		} else {
 			$sql = "INSERT INTO `cart`
-			(`p_id`, `ip_add`, `user_id`, `qty`) 
-			VALUES ('$p_id','$ip_add','$user_id','1')";
+			(`p_id`, `ip_add`, `user_id`, `qty`,`Total_amount`) 
+			VALUES ('$p_id','$ip_add','$user_id','1','$total_amount')";
 			if (mysqli_query($conn, $sql)) {
-				echo "
-					<div class='alert alert-success'>
-						<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
-						<b>Product is Added..!</b>
-					</div>
-				";
+				echo json_encode(['success' => true, 'message' => 'Product is Added..!']);
 				exit();
 			}
 		}
@@ -234,23 +222,15 @@ if (isset($_POST["addToCart"])) {
 		$sql = "SELECT id FROM cart WHERE ip_add = '$ip_add' AND p_id = '$p_id' AND user_id = -1";
 		$query = mysqli_query($conn, $sql);
 		if (mysqli_num_rows($query) > 0) {
-			echo "
-					<div class='alert alert-warning'>
-							<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
-							<b>Product is already added into the cart Continue Shopping..!</b>
-					</div>";
+			echo json_encode(['success' => true, 'message' => 'Product is already added into the cart Continue Shopping..!']);
 			exit();
+
 		}
 		$sql = "INSERT INTO `cart`
-			(`p_id`, `ip_add`, `user_id`, `qty`) 
-			VALUES ('$p_id','$ip_add','-1','1')";
+			(`p_id`, `ip_add`, `user_id`, `qty`,`Total_amount`) 
+			VALUES ('$p_id','$ip_add','-1','1','$total_amount')";
 		if (mysqli_query($conn, $sql)) {
-			echo "
-					<div class='alert alert-success'>
-						<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
-						<b>Your product is Added Successfully..!</b>
-					</div>
-				";
+			echo json_encode(['success' => true, 'message' => 'Product added to cart successfully!']);
 			exit();
 		}
 
@@ -286,10 +266,10 @@ if (isset($_POST["count_item"])) {
 // Check for common request
 if (isset($_POST["Common"])) {
 	$userId = isset($_SESSION["uid"]) ? $_SESSION["uid"] : -1;
-	$ip_add = $_SERVER['REMOTE_ADDR']; // Get the IP address for guest carts
+	$ip_add = $_SESSION['ip_add']; // Get the IP address for guest carts
 
 	// SQL query to fetch cart items for either a logged-in user or a guest based on IP
-	$sql = "SELECT a.product_id, a.product_desc,a.product_title, a.product_price, a.product_image, b.id, b.qty 
+	$sql = "SELECT a.product_id, a.product_desc,a.product_title, a.Discount_price,a.product_price, a.product_image, b.p_id, b.id, b.qty ,b.Total_amount
             FROM products a 
             JOIN cart b ON a.product_id = b.p_id 
             WHERE (? > 0 AND b.user_id = ?) OR (? <= 0 AND b.ip_add = ?)";
@@ -311,10 +291,10 @@ if (isset($_POST["Common"])) {
 			$product_image = htmlspecialchars($row["product_image"]);
 			$cart_item_id = htmlspecialchars($row["id"]);
 			$qty = htmlspecialchars($row["qty"]);
-			$total_price += $product_price;
-			$_SESSION['total_price'] = $total_price;
-			$_SESSION['product_id'] = $product_id;
-			$_SESSION['qty'] = $qty;
+			$Discount_price = $row["Discount_price"];
+			$total_price += $Discount_price;
+			$total_amount = $row['Total_amount'];
+
 			echo '
                 <div class="product-widget">
                     <div class="product-img">
@@ -322,7 +302,7 @@ if (isset($_POST["Common"])) {
                     </div>
                     <div class="product-body">
                         <h3 class="product-name"><a href="#">' . $product_title . '</a></h3>
-                        <h4 class="product-price"><span class="qty">' . $n . '</span>$' . $product_price . '</h4>
+                        <h4 class="product-price"><span class="qty">' . $n . '</span>$' . $Discount_price . '</h4>
                     </div>
                 </div>
             ';
@@ -336,6 +316,7 @@ if (isset($_POST["Common"])) {
 	}
 
 	if (isset($_POST["checkOutDetails"])) {
+
 		if ($result->num_rows > 0) {
 			//display user cart item with "Ready to checkout" button if user is not login
 			echo '<div class="main ">
@@ -363,44 +344,41 @@ if (isset($_POST["Common"])) {
 				$product_price = $row["product_price"];
 				$product_image = $row["product_image"];
 				$cart_item_id = $row["id"];
+				$Discount_price = $row["Discount_price"];
 				$qty = $row["qty"];
-				echo
-					'
-                             
-						<tr>
-							<td data-th="Product" >
-								<div class="row">
-								
-									<div class="col-sm-4 "><img src="./images/product_images/' . $product_image . '" style="height: 70px;width:75px;"/>
-									<h4 class="nomargin product-name header-cart-item-name"><a href="product.php?p=' . $product_id . '">' . $product_title . '</a></h4>
-									</div>
-									<div class="col-sm-6">
-										<div style="max-width=50px;">
-										<p>' . $product_desc . '</p>
-										</div>
-									</div>
-									
-									
-								</div>
-							</td>
-                            <input type="hidden" name="product_id[]" value="' . $product_id . '"/>
-				            <input type="hidden" name="" value="' . $cart_item_id . '"/>
-							<td data-th="Price"><input type="text" class="form-control price" value="' . $product_price . '" readonly="readonly"></td>
-							<td data-th="Quantity">
-								<input type="text" class="form-control qty" value="' . $qty . '" >
-							</td>
-							<td data-th="Subtotal" class="text-center">
-							<input type="text" class="form-control total" value="' . $product_price . '" readonly="readonly"></td>
-							<td class="actions" data-th="">
-							
-							<a href="#" class="btn btn-info btn-sm update" update_id="' . $product_id . '"><i class="fa fa-refresh"></i></a>
-								
-								<a href="#" class="btn btn-danger btn-sm remove" remove_id="' . $product_id . '"><i class="fa fa-trash"></i></a>						
-							</td>
-						</tr>
-					
-                            
-                            ';
+				$total_amount = $row['Total_amount'];
+				$p_id = $row["p_id"];
+				$_SESSION['product_id'] = $p_id;
+				$_SESSION['total_price'] = $total_amount;
+				$_SESSION['qty'] = $qty;
+				echo '<tr>
+        <td data-th="Product">
+            <div class="row">
+                <div class="col-sm-4"><img src="./images/product_images/' . $product_image . '" style="height: 70px;width:75px;"/>
+                    <h4 class="nomargin product-name header-cart-item-name"><a href="product.php?p=' . $product_id . '">' . $product_title . '</a></h4>
+                </div>
+                <div class="col-sm-6">
+                    <div style="max-width=50px;">
+                        <p>' . $product_desc . '</p>
+                    </div>
+                </div>
+            </div>
+        </td>
+        <input type="hidden" name="product_id[]" value="' . $product_id . '"/>
+        <input type="hidden" name="" value="' . $cart_item_id . '"/>
+        <td data-th="Price"><input type="text" class="form-control price" value="' . $Discount_price . '" readonly="readonly"></td>
+        <td data-th="Quantity">
+		<input type="text" class="form-control qty" value="' . $qty . '" id="quantityInput' . $product_id . '" data-product-id="' . $product_id . '" data-product-price="' . $Discount_price . '" onChange="handleQuantityChange(event);">
+        </td>
+        <td data-th="Subtotal" class="text-center">
+            <input type="text" class="form-control total" value="' . $product_price . '" readonly="readonly"></td>
+        <td class="actions" data-th="">
+            <a href="#" class="btn btn-info btn-sm update" update_id="' . $product_id . '"><i class="fa fa-refresh"></i></a>
+            <a href="#" class="btn btn-danger btn-sm remove" remove_id="' . $product_id . '"><i class="fa fa-trash"></i></a>
+        </td>
+    </tr>
+';
+
 			}
 
 			echo '</tbody>
@@ -427,7 +405,7 @@ if (isset($_POST["Common"])) {
 				echo '
 					</form>
 					
-						<form action="checkout.php" method="post">
+						<form action="userDetail.php" method="post">
 							<input type="hidden" name="cmd" value="_cart">
 							<input type="hidden" name="business" value="shoppingcart@puneeth.com">
 							<input type="hidden" name="upload" value="1">';
@@ -523,7 +501,21 @@ if (isset($_POST["updateCartItem"])) {
 	}
 }
 
-
+if (isset($_POST["newQty"])) {
+	$qty = $_POST["newQty"];
+	$update_id = $_POST['product_id'];
+	$total_amount = $_POST['total_amount'];
+	$net_total = $total_amount * $qty;
+	$condition = isset($_SESSION["uid"]) ? "user_id = '$_SESSION[uid]'" : "ip_add = '$ip_add'";
+	$sql = "UPDATE cart SET qty='$qty',Total_amount='$net_total' WHERE p_id = '$update_id' AND $condition";
+	if (mysqli_query($conn, $sql)) {
+		echo "<div class='alert alert-info'>
+            <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
+            <b>quantity is updated</b>
+        </div>";
+		exit();
+	}
+}
 
 
 

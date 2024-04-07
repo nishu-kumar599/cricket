@@ -3,7 +3,6 @@ $(document).ready(function () {
   cathome();
   brand();
   product();
-
   producthome();
 
   //cat() is a funtion fetching category record from database whenever page is load
@@ -216,23 +215,34 @@ $(document).ready(function () {
   //Get User Information before checkout end here
 
   //Add Product into Cart
-  $("body").delegate("#product", "click", function (event) {
-    var pid = $(this).attr("pid");
-
-    event.preventDefault();
-    $(".overlay").show();
-    $.ajax({
-      url: "action.php",
-      method: "POST",
-      data: { addToCart: 1, proId: pid },
-      success: function (data) {
-        count_item();
-        getCartItem();
-        $("#product_msg").html(data);
-        $(".overlay").hide();
-      },
+  $("body")
+    .off("click", "#product")
+    .delegate("#product", "click", function (event) {
+      var pid = $(this).attr("pid");
+      var total_amount = $(this).attr("total_amount");
+      event.preventDefault();
+      event.stopPropagation();
+      $(".overlay").show();
+      $.ajax({
+        url: "action.php",
+        method: "POST",
+        data: { addToCart: 1, proId: pid, total_amount: total_amount },
+        success: function (response) {
+          $(".overlay").hide();
+          var data = JSON.parse(response); // Make sure to parse the JSON response
+          if (data.success === true) {
+            toastr.success(data.message);
+            // Use Toastr for success message
+          } else {
+            toastr.error(data.message);
+            // Use Toastr for error or warning message
+          }
+          count_item();
+          getCartItem();
+        },
+      });
     });
-  });
+
   //Add Product into Cart End Here
   //Count user cart items funtion
   count_item();
@@ -393,3 +403,18 @@ $(document).ready(function () {
     });
   });
 });
+document.getElementById("id_TeamField").onchange = handleQuantityChange;
+
+function handleQuantityChange(event) {
+  var qtyInput = event.target; // This is the input element that triggered the event
+  var newQty = qtyInput.value; // The new quantity value
+  var product_id = qtyInput.getAttribute("data-product-id");
+  var total_amount = qtyInput.getAttribute("data-product-price");
+  $.ajax({
+    url: "action.php",
+    method: "POST",
+    data: { newQty, product_id, total_amount },
+    success: function (data) {},
+  });
+  // Here you can add your AJAX call to update the quantity in the cart
+}
