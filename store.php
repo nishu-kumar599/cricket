@@ -5,6 +5,8 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="js/action.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
     <?php
     require 'head.php'; ?>
     <link rel="stylesheet" href="css/style1.css">
@@ -64,7 +66,7 @@
             display: contents;
         }
 
-         .store-grid .badge {
+        .store-grid .badge {
             position: absolute;
             right: 18px;
             top: -31px;
@@ -145,8 +147,7 @@
 
 
                                             <!-- Cart -->
-                                            <a href='cart.php' class="dropdown"
-                                                onclick="onClick('cart.php')">
+                                            <a href='cart.php' class="dropdown" onclick="onClick('cart.php')">
                                                 <div class="dropdown">
                                                     <!-- <a class="dropdown" data-toggle="dropdown" aria-expanded="true"
                                                         onClick={this.onClickDoSomething}> -->
