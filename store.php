@@ -69,10 +69,10 @@
         .store-grid .badge {
             position: absolute;
             right: 18px;
-            top: -31px;
+            top: -30px;
             width: 20px;
             height: 20px;
-            line-height: 20px;
+            line-height: 16px;
             text-align: center;
             border-radius: 50%;
             font-size: 10px;

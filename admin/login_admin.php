@@ -17,7 +17,10 @@ require ("../csrf_token.php");
         }
 
         .container {
-            background-color: rgba(255, 255, 255, 1); /* Semi-transparent background */
+            max-width: 500px;
+            margin: 50px auto;
+            background-color: rgba(255, 255, 255, 1);
+            /* Semi-transparent background */
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -35,13 +38,15 @@ require ("../csrf_token.php");
         }
 
         label {
+            text-align: left;
             display: block;
             margin-bottom: 5px;
         }
 
         input[type="email"],
+        input[type="text"],
         input[type="password"] {
-            width: 100%;
+            width: -webkit-fill-available;
             padding: 8px;
             border-radius: 5px;
             border: 1px solid #ccc;
@@ -67,57 +72,7 @@ require ("../csrf_token.php");
             margin-top: 10px;
         }
     </style>
-    <style>
-      
 
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        h2 {
-            text-align: center;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 8px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        .error-message {
-            color: red;
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: #fff;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
 </head>
 
 <body>

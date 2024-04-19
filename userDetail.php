@@ -22,6 +22,11 @@ session_start();
             height: 100vh;
         }
 
+        body {
+            background-image: url(../images/banner3.png);
+            background-size: cover;
+        }
+
         .container {
             background-color: #fff;
             padding: 20px;
@@ -46,7 +51,7 @@ session_start();
         input[type="text"],
         input[type="email"],
         input[type="password"] {
-            width: 100%;
+            width: -webkit-fill-available;
             padding: 8px;
             border-radius: 5px;
             border: 1px solid #ccc;
@@ -78,49 +83,53 @@ session_start();
 <body>
     <div class="container w-75 mt-5">
         <h3>Billing Address</h3>
-        <form action="paymentgateway.php" method="POST">
-            <div class="form-group">
-                <label for="fname"><i class="fa fa-user"></i> Full Name</label>
-                <input type="text" id="fname" class="form-control" name="firstname" pattern="^[a-zA-Z ]+$">
-            </div>
-            <div class="form-group">
-                <label for="city"><i class="fa fa-institution"></i> City</label>
-                <input type="text" id="city" name="city" class="form-control" pattern="^[a-zA-Z ]+$" required>
-            </div>
-            <div class="form-group">
-                <label for="LandMark"><i class="fa fa-institution"></i> LandMark</label>
-                <input type="text" id="LandMark" name="LandMark" class="form-control" pattern="^[a-zA-Z ]+$" required>
-            </div>
-            <div class="row">
-                <div class="col-sm-6 form-group">
-                    <label for="state">State</label>
-                    <input type="text" id="state" name="state" class="form-control" pattern="^[a-zA-Z ]+$" required>
+        <div class="row">
+            <form action="paymentgateway.php" method="POST">
+                <div class="form-group">
+                    <label for="fname"><i class="fa fa-user"></i> Full Name</label>
+                    <input type="text" id="fname" class="form-control" name="firstname" pattern="^[a-zA-Z ]+$">
                 </div>
-                <div class="col-sm-6 form-group">
-                    <label for="zip">Zip</label>
-                    <input type="text" id="zip" name="zip" class="form-control" pattern="^[0-9]{6}(?:-[0-9]{4})?$"
+                <div class="form-group">
+                    <label for="city"><i class="fa fa-institution"></i> City</label>
+                    <input type="text" id="city" name="city" class="form-control" pattern="^[a-zA-Z ]+$" required>
+                </div>
+                <div class="form-group">
+                    <label for="LandMark"><i class="fa fa-institution"></i> LandMark</label>
+                    <input type="text" id="LandMark" name="LandMark" class="form-control" pattern="^[a-zA-Z ]+$"
                         required>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="address">Address:</label>
-                <input type="text" id="address" name="address" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="contact_number">Contact Number</label>
-                <input type="text" id="contact_number" name="contact_number" class="form-control">
-            </div>
-            <!-- Hidden Inputs -->
-            <input type="hidden" id="qty" name="qty" value="<?php echo $_SESSION['qty']; ?>">
-            <input type="hidden" id="total_price" name="total_price" value="<?php echo $_SESSION['total_price']; ?>">
-            <input type="hidden" id="product_id" name="product_id" value="<?php echo $_SESSION['product_id']; ?>">
-            <input type="hidden" id="ip_add" name="ip_add" value="<?php echo $_SESSION['ip_add']; ?>">
-            <button type="submit" class="btn btn-primary">Continue</button>
-        </form>
+                <div class="row">
+                    <div class="col-sm-6 form-group">
+                        <label for="state">State</label>
+                        <input type="text" id="state" name="state" class="form-control" pattern="^[a-zA-Z ]+$" required>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label for="zip">Zip</label>
+                        <input type="text" id="zip" name="zip" class="form-control" pattern="^[0-9]{6}(?:-[0-9]{4})?$"
+                            required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address:</label>
+                    <input type="text" id="address" name="address" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact_number">Contact Number</label>
+                    <input type="text" id="contact_number" name="contact_number" class="form-control">
+                </div>
+                <!-- Hidden Inputs -->
+                <input type="hidden" id="qty" name="qty" value="<?php echo $_SESSION['qty']; ?>">
+                <input type="hidden" id="total_price" name="total_price"
+                    value="<?php echo $_SESSION['total_price']; ?>">
+                <input type="hidden" id="product_id" name="product_id" value="<?php echo $_SESSION['product_id']; ?>">
+                <input type="hidden" id="ip_add" name="ip_add" value="<?php echo $_SESSION['ip_add']; ?>">
+                <button type="submit" class="btn btn-primary">Continue</button>
+            </form>
+        </div>
     </div>
 
 </body>

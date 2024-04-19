@@ -60,7 +60,7 @@ session_start();
 </head>
 
 <body>
-    <?php if (isset ($_SESSION["logged-in"]) && $_SESSION["logged-in"] === true): ?>
+    <?php if (isset($_SESSION["logged-in"]) && $_SESSION["logged-in"] === true): ?>
         <!-- Sidebar -->
         <div class="sidebar">
             <a href="#" id="clubsTab">Clubs</a>
@@ -68,6 +68,7 @@ session_start();
             <a href="#" id="merchandiseTab">Merchandise</a>
             <a href="#" id="CategoriesTab">Categories</a>
             <a href="#" id="orderTab">Order</a>
+            <a href="#" id="editorTab">Editor</a>
             <a href="logout_admin.php" id="playersTab">Logout</a>
         </div>
 
@@ -115,7 +116,11 @@ session_start();
                 e.preventDefault();
                 loadorderContent();
             });
-
+            //click event for the editor tab
+            $("#editorTab").click(function (e) {
+                e.preventDefault();
+                loadorderContent();
+            });
             // Function to load the clubs content
             function loadClubsContent() {
                 // Load the content from clubs.php into the mainContent container
@@ -142,6 +147,11 @@ session_start();
             function loadorderContent() {
                 // Load the content from order.php into the mainContent container
                 $("#mainContent").load("../adminShop/order.php");
+            }
+            // Function to load the blog content
+            function loadorderContent() {
+                // Load the content from order.php into the mainContent container
+                $("#mainContent").load("../adminShop/blog.php");
             }
         });
     </script>

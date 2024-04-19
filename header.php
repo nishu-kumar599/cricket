@@ -61,7 +61,7 @@
                   <li><a href="page-404-one.html">Page 404 Two</a></li>
                 </ul>
               </li>
-              <li class="nav-item drop-down"> <a href="">News</a>
+              <li class="nav-item drop-down"> <a href="news.php">News</a>
 
               </li>
               <li class="nav-item drop-down"> <a href="">Fixtures</a>

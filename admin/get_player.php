@@ -3,7 +3,7 @@
 include '../db_connection.php';
 
 // Check if club_id is provided via POST request
-if (isset ($_POST['club_id'])) {
+if (isset($_POST['club_id'])) {
     $club_id = $_POST['club_id'];
 
     // Fetch players associated with the selected club from the database
@@ -17,12 +17,13 @@ if (isset ($_POST['club_id'])) {
 
     // Display players in HTML format
     if ($result_players->num_rows > 0) {
-        echo '<table class="table table-bordered" id="data-table">
+        echo '<table class="table table-bordered" id="data-table" >
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
                         <th>Age</th>
+                        <th>Dob</th>
                         <th>Mobile</th>
                         <th>Email</th>
                         <th>Type</th>
@@ -59,6 +60,7 @@ if (isset ($_POST['club_id'])) {
                     <td>' . $player_row['player_id'] . '</td>
                     <td>' . $player_row['name'] . '</td>
                     <td>' . $player_row['age'] . '</td>
+                    <td>' . $player_row['dob'] . '</td>
                     <td>' . $player_row['mobile'] . '</td>
                     <td>' . $player_row['email'] . '</td>
                     <td>' . $player_row['type'] . '</td>
@@ -69,7 +71,7 @@ if (isset ($_POST['club_id'])) {
                     <td style="display: none;">' . $club_id . '</td>
                     <td>';
             // Display Aadhar Card image
-            if (!empty ($player_row['aadhar_card'])) {
+            if (!empty($player_row['aadhar_card'])) {
                 echo '<img src="' . $aadhar_card_data_url . '" alt="Aadhar Card" width="100">';
             } else {
                 echo 'Not Available';
@@ -77,7 +79,7 @@ if (isset ($_POST['club_id'])) {
             echo '</td>
                     <td>';
             // Display Profile Picture placeholder or icon
-            if (!empty ($player_row['profile_picture'])) {
+            if (!empty($player_row['profile_picture'])) {
                 echo '<img src="' . $profile_picture_data_url . '" alt="Profile Picture" width="100">';
             } else {
                 echo 'Not Available';
@@ -104,7 +106,7 @@ if (isset ($_POST['club_id'])) {
 
     // Close statement and database connection
     $stmt->close();
-    $conn->close();
+
 } else {
     // If club_id is not provided, return an error message
     echo '<p>Error: Club ID not provided.</p>';
@@ -135,6 +137,13 @@ if (isset ($_POST['club_id'])) {
                         <label for="editAge">Age:</label>
                         <input type="number" id="editAge" name="age" class="form-control" required>
                     </div>
+
+                    <div class="form-group">
+                        <label for="editDob">Date of Birth:</label>
+                        <div class="input-group date">
+                            <input type="date" id="editDob" name="dob" class="form-control" required>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label for="editMobile">Mobile Number:</label>
                         <input type="text" id="editMobile" name="mobile" class="form-control" required>
@@ -164,21 +173,12 @@ if (isset ($_POST['club_id'])) {
                         <label for="editAddress">Address:</label>
                         <textarea id="editAddress" name="address" class="form-control" required></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="editAadharCard">Aadhar Card:</label>
-                        <input type="file" id="editAadharCard" name="aadhar_card" class="form-control-file">
-                        <small class="form-text text-muted">Upload a new Aadhar Card image if needed.</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="editProfilePicture">Profile Picture:</label>
-                        <input type="file" id="editProfilePicture" name="profile_picture" class="form-control-file">
-                        <small class="form-text text-muted">Upload a new Profile Picture if needed.</small>
-                    </div>
+
                     <div class="form-group">
                         <label for="editClub">Club:</label>
                         <select id="editClub" name="club" class="form-control" required>
                             <?php
-                            include 'db_connection.php';
+                            include '../db_connection.php';
                             $sql_clubs = "SELECT * FROM clubs";
                             $result_clubs = $conn->query($sql_clubs);
                             if ($result_clubs->num_rows > 0) {
@@ -286,14 +286,15 @@ if (isset ($_POST['club_id'])) {
             var playerId = $(this).closest('tr').find('td:first').text(); // Get the player ID
             var playerName = $(this).closest('tr').find('td:eq(1)').text(); // Get the player name
             var playerAge = $(this).closest('tr').find('td:eq(2)').text(); // Get the player age
-            var playerMobile = $(this).closest('tr').find('td:eq(3)').text(); // Get the player mobile number
-            var playerEmail = $(this).closest('tr').find('td:eq(4)').text(); // Get the player email
-            var playerType = $(this).closest('tr').find('td:eq(5)').text(); // Get the player type
-            var clubName = $(this).closest('tr').find('td:eq(10)').text();
-            var playerState = $(this).closest('tr').find('td:eq(7)').text(); // Get the player state
-            var playerCity = $(this).closest('tr').find('td:eq(8)').text(); // Get the player city
-            var playerAddress = $(this).closest('tr').find('td:eq(9)').text();
-            var playerPaymentStatus = $(this).closest('tr').find('td:eq(13)').text();
+            var playerDob = $(this).closest('tr').find('td:eq(3)').text(); // Get the player age
+            var playerMobile = $(this).closest('tr').find('td:eq(4)').text(); // Get the player mobile number
+            var playerEmail = $(this).closest('tr').find('td:eq(5)').text(); // Get the player email
+            var playerType = $(this).closest('tr').find('td:eq(6)').text(); // Get the player type
+            var clubName = $(this).closest('tr').find('td:eq(11)').text();
+            var playerState = $(this).closest('tr').find('td:eq(8)').text(); // Get the player state
+            var playerCity = $(this).closest('tr').find('td:eq(9)').text(); // Get the player city
+            var playerAddress = $(this).closest('tr').find('td:eq(10)').text();
+            var playerPaymentStatus = $(this).closest('tr').find('td:eq(14)').text();
 
 
             // Get the club name
@@ -302,6 +303,7 @@ if (isset ($_POST['club_id'])) {
             $('#editPlayerId').val(playerId);
             $('#editName').val(playerName);
             $('#editAge').val(playerAge);
+            $('#editDob').val(playerDob);
             $('#editMobile').val(playerMobile);
             $('#editEmail').val(playerEmail);
             $('#editType').val(playerType);
@@ -322,6 +324,7 @@ if (isset ($_POST['club_id'])) {
                 playerId: $('#editPlayerId').val(),
                 name: $('#editName').val(),
                 age: $('#editAge').val(),
+                dob: $('#editDob').val(),
                 mobile: $('#editMobile').val(),
                 email: $('#editEmail').val(),
                 type: $('#editType').val(),
@@ -337,11 +340,21 @@ if (isset ($_POST['club_id'])) {
                 type: 'POST',
                 data: data,
                 success: function (response) {
-                    // Handle successful update
-                    console.log(response);
+                    // Update the corresponding table row with new data
+                    var tableRow = $('#data-table tbody tr td:first-child:contains(' + data.playerId + ')').closest('tr');
+                    tableRow.find('td:eq(1)').text(data.name);
+                    tableRow.find('td:eq(2)').text(data.age);
+                    tableRow.find('td:eq(3)').text(data.dob);
+                    tableRow.find('td:eq(4)').text(data.mobile);
+                    tableRow.find('td:eq(5)').text(data.email);
+                    tableRow.find('td:eq(6)').text(data.type);
+                    tableRow.find('td:eq(8)').text(data.state);
+                    tableRow.find('td:eq(9)').text(data.city);
+                    tableRow.find('td:eq(10)').text(data.address);
+                    tableRow.find('td:eq(13)').text(data.club);
                     $('#editPlayerModal').modal('hide');
-                    // Optionally: Refresh the page or table to show updated information
-                    location.reload();
+                    // location.reload();
+
                 },
                 error: function (xhr, status, error) {
                     // Handle errors
@@ -349,24 +362,21 @@ if (isset ($_POST['club_id'])) {
                 }
             });
         });
-
-
     });
 
-</script>
-<script>
+
     $(document).ready(function () {
         $('table').on('click', '.edit-scorecard', function () {
             var playerId = $(this).closest('tr').find('td:first').text(); // Example of getting the player ID
-            var playerRuns = $(this).closest('tr').find('td:eq(14)').text();
-            var playerWicket = $(this).closest('tr').find('td:eq(15)').text();
-            var playerCatches = $(this).closest('tr').find('td:eq(16)').text();
-            var playerNoOfSix = $(this).closest('tr').find('td:eq(17)').text();
-            var playerNoOfFour = $(this).closest('tr').find('td:eq(18)').text();
-            var playerFiveWicketHall = $(this).closest('tr').find('td:eq(19)').text();
-            var playerNoOfHundred = $(this).closest('tr').find('td:eq(20)').text();
-            var playerNoOfFifty = $(this).closest('tr').find('td:eq(21)').text();
-            var playerNoOfStumping = $(this).closest('tr').find('td:eq(22)').text();
+            var playerRuns = $(this).closest('tr').find('td:eq(15)').text();
+            var playerWicket = $(this).closest('tr').find('td:eq(16)').text();
+            var playerCatches = $(this).closest('tr').find('td:eq(17)').text();
+            var playerNoOfSix = $(this).closest('tr').find('td:eq(18)').text();
+            var playerNoOfFour = $(this).closest('tr').find('td:eq(19)').text();
+            var playerFiveWicketHall = $(this).closest('tr').find('td:eq(20)').text();
+            var playerNoOfHundred = $(this).closest('tr').find('td:eq(21)').text();
+            var playerNoOfFifty = $(this).closest('tr').find('td:eq(22)').text();
+            var playerNoOfStumping = $(this).closest('tr').find('td:eq(23)').text();
 
             $('#editPlayerId').val(playerId);
             $('#editRuns').val(playerRuns);
@@ -403,9 +413,19 @@ if (isset ($_POST['club_id'])) {
                 success: function (response) {
                     // Handle successful update
                     console.log(response);
+                    // Update the corresponding table row with new scorecard data
+                    var tableRow = $('#data-table tbody tr td:first-child:contains(' + data.playerId + ')').closest('tr');
+                    tableRow.find('td:eq(15)').text(data.Runs);
+                    tableRow.find('td:eq(16)').text(data.Wicket);
+                    tableRow.find('td:eq(17)').text(data.Catches);
+                    tableRow.find('td:eq(18)').text(data.NoOfSix);
+                    tableRow.find('td:eq(19)').text(data.NoOffour);
+                    tableRow.find('td:eq(20)').text(data.FiveWicketHall);
+                    tableRow.find('td:eq(21)').text(data.NoOfHundred);
+                    tableRow.find('td:eq(22)').text(data.NoOfFifty);
+                    tableRow.find('td:eq(23)').text(data.NoOfStumping);
                     $('#editScoreModal').modal('hide');
-                    // Optionally: Refresh the page or table to show updated information
-                    location.reload();
+                    // location.reload();
                 },
                 error: function (xhr, status, error) {
                     // Handle errors
@@ -415,12 +435,9 @@ if (isset ($_POST['club_id'])) {
         });
 
     });
-</script>
 
-
-<script>
     $(document).ready(function () {
-        var rowsToShow = 1; // Number of rows to show per page
+        var rowsToShow = 5; // Number of rows to show per page
         var totalRows = $('#data-table tbody tr').length; // Total rows in the table
         var totalPages = Math.ceil(totalRows / rowsToShow); // Total pages needed
 
@@ -452,4 +469,7 @@ if (isset ($_POST['club_id'])) {
         // Generate pagination controls
         setupPagination(totalPages);
     });
+
+
+
 </script>

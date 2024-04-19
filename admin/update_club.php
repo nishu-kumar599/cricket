@@ -1,6 +1,5 @@
 <?php
 include '../db_connection.php';
-
 // Assuming $_POST contains all required fields
 $id = $_POST['clubId'];
 $name = $_POST['name'];
@@ -18,7 +17,7 @@ $stmt = $conn->prepare($sql);
 
 // Check if prepare() failed
 if ($stmt === false) {
-    die ("Error preparing statement: " . $conn->error);
+    die("Error preparing statement: " . $conn->error);
 }
 
 // Bind parameters and execute
@@ -32,5 +31,5 @@ if ($stmt->execute()) {
 
 // Close statement and connection
 $stmt->close();
-$conn->close();
+
 ?>

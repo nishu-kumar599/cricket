@@ -3,7 +3,7 @@
 session_start();
 
 // Check if admin is logged in, if not, redirect to login page
-if (!isset ($_SESSION['admin_id'])) {
+if (!isset($_SESSION['admin_id'])) {
     header("Location: login_admin.php");
     exit();
 }
@@ -222,9 +222,19 @@ $conn->close();
                 success: function (response) {
                     // Handle successful update
                     console.log(response);
+                    // Update the corresponding table row with new data
+                    var tableRow = $('#data-table tbody tr td:first-child:contains(' + data.clubId + ')').closest('tr');
+                    tableRow.find('td:eq(1)').text(data.name);
+                    tableRow.find('td:eq(2)').text(data.location);
+                    tableRow.find('td:eq(3)').text(data.email);
+                    tableRow.find('td:eq(4)').text(data.panNumber);
+                    tableRow.find('td:eq(5)').text(data.aadharNumber);
+                    tableRow.find('td:eq(6)').text(data.directorName);
+                    tableRow.find('td:eq(7)').text(data.secretaryName);
+                    tableRow.find('td:eq(8)').text(data.mobile);
                     $('#editPlayerModal').modal('hide');
                     // Optionally: Refresh the page or table to show updated information
-                    location.reload();
+                    // location.reload();
                 },
                 error: function (xhr, status, error) {
                     // Handle errors
@@ -233,10 +243,7 @@ $conn->close();
             });
         });
     });
-</script>
 
-
-<script type="text/javascript">
     function search_data() {
         const Data = $('#search').val(); // Make sure the input has an id="search"
         $.ajax({
@@ -252,8 +259,7 @@ $conn->close();
             }
         });
     }
-</script>
-<script>
+
     $(document).ready(function () {
         var rowsToShow = 4; // Number of rows to show per page
         var totalRows = $('#data-table tbody tr').length; // Total rows in the table

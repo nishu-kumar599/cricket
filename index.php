@@ -275,84 +275,56 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-lg-8">
-              <!--News Box Start-->
-              <div class="news-list-post">
-                <div class="post-thumb"> <a href="#"><i class="fas fa-link"></i></a> <img
-                    src="images/news/kohli.webp" alt=""></div>
-                <div class="post-txt">
-                  <ul class="post-author">
-                    <li><img src="images/user1.jpg" alt=""> <strong>Smith Jones</strong></li>
-                    <li class="share"><i class="fas fa-share-alt"></i></li>
-                    <li class="likes"><i class="far fa-heart"></i> 52 Likes</li>
-                  </ul>
-                  <h4><a href="#">Kohli on his break from cricket</a></h4>
-                  <ul class="post-meta">
-                    <li><i class="fas fa-calendar-alt"></i>  Mar 26, 2024</li>
-                    <li><i class="far fa-comment"></i> 89 Comments</li>
-                  </ul>
-                  <p>Virat Kohli opened up on his two-month break from cricket, terming the time away from the game and the country on paternity leave.</p>
-                  <a href="#" class="rm">Read More</a>
+            <?php
+            include 'db_connection.php';
+            // Fetch the latest three blog entries
+            $stmt = $conn->prepare("SELECT id, title, description, editor, image, created_at FROM blog ORDER BY created_at DESC LIMIT 2");
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            while ($row = $result->fetch_assoc()) {
+              $id = $row['id'];
+              $title = $row['title']; // Assume HTML safe or sanitize elsewhere if needed.
+              $description = $row['description']; // Output HTML content directly.
+              $editor = $row['editor'];
+              $image = $row['image'];
+              $created_at = date("M d, Y", strtotime($row['created_at']));
+              $imagePath = $image ? "../images/blog_images/{$image}" : 'path_to_default_image.jpg';
+              ?>
+              <div class="col-lg-6">
+                <div class="news-list-post">
+                  <div class="post-thumb">
+                    <a href="news_detail.php?id=<?php echo $id; ?>"><i class="fas fa-link"></i></a>
+                    <img src="<?php echo $imagePath; ?>"
+                      alt="<?php echo htmlspecialchars($title, ENT_QUOTES, 'UTF-8'); ?>" class="img-fluid">
+                  </div>
+                  <div class="post-txt">
+                    <ul class="post-author">
+                      <li><img src="images/user1.jpg" alt="">
+                        <strong><?php echo htmlspecialchars($editor, ENT_QUOTES, 'UTF-8'); ?></strong>
+                      </li>
+                    </ul>
+                    <h4><a
+                        href="news_detail.php?id=<?php echo $id; ?>"><?php echo htmlspecialchars($title, ENT_QUOTES, 'UTF-8'); ?></a>
+                    </h4>
+                    <ul class="post-meta">
+                      <li><i class="fas fa-calendar-alt"></i> <?php echo $created_at; ?></li>
+                    </ul>
+                    <p><?php echo $description; ?></p> <!-- Render HTML from description -->
+                    <a href="news_detail.php?id=<?php echo $id; ?>" class="rm">Read More</a>
+                  </div>
                 </div>
               </div>
-              <!--News Box End-->
-              <!--News Box Start-->
-              <div class="news-list-post">
-                <div class="post-thumb"> <a href="#"><i class="fas fa-link"></i></a> <img
-                    src="images/news/ruturaj.webp" alt=""></div>
-                <div class="post-txt">
-                  <ul class="post-author">
-                    <li><img src="images/user1.jpg" alt=""> <strong>Smith Jones</strong></li>
-                    <li class="share"><i class="fas fa-share-alt"></i></li>
-                    <li class="likes"><i class="far fa-heart"></i> 52 Likes</li>
-                  </ul>
-                  <h4><a href="#">Fleming pleased with CSK's intent continuity</a></h4>
-                  <ul class="post-meta">
-                    <li><i class="fas fa-calendar-alt"></i> 27 June, 2020</li>
-                    <li><i class="far fa-comment"></i> 89 Comments</li>
-                  </ul>
-                  <p>The years we don't do well, we look at why and rectify that. So one of the changes was having very strong intent...</p>
-                  <a href="#" class="rm">Read More</a>
-                </div>
-              </div>
-              <!--News Box End-->
-            </div>
-            <!--Side 2 News Start-->
-            <div class="col-lg-4">
-              <!--Box Start-->
-              <div class="hnews-box">
-                <div class="thumb"> <span>Interview</span> <a href="#"><i class="fas fa-link"></i></a><img
-                    src="images/news/numberthree.webp" alt=""></div>
-                <div class="hnews-txt">
-                  <h4> <a href="#">Naman Dhir, Mumbai's new No. 3?</a> </h4>
-                  <ul class="news-meta">
-                    <li><i class="far fa-clock"></i> 13 Dec, 2020</li>
-                    <li><i class="far fa-comment"></i> 69</li>
-                    <li><i class="fas fa-share-square"></i> 103</li>
-                  </ul>
-                </div>
-              </div>
-              <!--Box End-->
-              <!--Box Start-->
-              <div class="hnews-box">
-                <div class="thumb"> <span>Documentry</span> <a href="#"><i class="fas fa-link"></i></a><img
-                    src="images/news/dhoni.jpeg" alt=""></div>
-                <div class="hnews-txt">
-                  <h4> <a href="#"> The Man Who Bought Cricket (2022)</a> </h4>
-                  <ul class="news-meta">
-                    <li><i class="far fa-clock"></i> 13 Dec, 2020</li>
-                    <li><i class="far fa-comment"></i> 69</li>
-                    <li><i class="fas fa-share-square"></i> 103</li>
-                  </ul>
-                </div>
-              </div>
-              <!--Box End-->
-            </div>
-            <!--Side 2 News End-->
+              <?php
+            }
+            $stmt->close();
+            ?>
           </div>
         </div>
-
       </section>
+
+
+
       <!--News & Media Gallery End-->
 
       <!--Shop Products Start-->

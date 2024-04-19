@@ -3,7 +3,7 @@
 // Start the session 
 session_start();
 // Include the CSRF token management script
-require("../csrf_token.php");
+require ("../csrf_token.php");
 
 ?>
 <!DOCTYPE html>
@@ -14,7 +14,7 @@ require("../csrf_token.php");
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <title>Player Login</title>
-    
+
     <style>
         /* Basic styling for better UI */
         body {
@@ -23,7 +23,9 @@ require("../csrf_token.php");
         }
 
         .container {
-            background-color: rgba(255, 255, 255, 1); /* Semi-transparent background */
+            width: 500px;
+            background-color: rgba(255, 255, 255, 1);
+            /* Semi-transparent background */
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -47,7 +49,7 @@ require("../csrf_token.php");
 
         input[type="email"],
         input[type="password"] {
-            width: 100%;
+            width: -webkit-fill-available;
             padding: 8px;
             border-radius: 5px;
             border: 1px solid #ccc;
@@ -76,7 +78,7 @@ require("../csrf_token.php");
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="../index.php">
             <img src="../images/new/logo.png" width="50" height="50" class="d-inline-block align-top" alt="">
         </a>
@@ -105,7 +107,7 @@ require("../csrf_token.php");
         </div>
     </nav>
     <div class="container">
-        <div style="text-align: center;"><img  width= "35px" src="../images/new/logo.png" alt=""></div>
+        <div style="text-align: center;"><img width="35px" src="../images/new/logo.png" alt=""></div>
         <h2>Login to your player account</h2>
         <form action="login_player_process.php" method="POST">
             <div class="form-group">
@@ -119,7 +121,7 @@ require("../csrf_token.php");
             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
             <button type="submit">Login</button>
         </form>
-         <div class="container" style="box-shadow:none;text-align:center">
+        <div class="container" style="box-shadow:none;text-align:center">
             <span class="psw">Forgot <a href="forget_password.php">password?</a></span>
         </div>
         <?php

@@ -5383,9 +5383,13 @@ ul.post-meta li i {
 }
 .news-list-post .post-txt p {
 	color: #777777;
-	font-size: 14px;
-	line-height: 23px;
-	margin: 0 0 25px;
+    font-size: 14px;
+    line-height: 23px;
+    margin: 0 0 25px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
 }
 .news-list-post:hover .post-thumb:before, .news-list-post:hover .post-thumb:after {
 	opacity: 1;

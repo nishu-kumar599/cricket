@@ -3,7 +3,7 @@ session_start();
 include '../db_connection.php'; // Ensure this file exists and correctly initializes the database connection
 error_reporting(0);
 
-if (isset ($_GET['action']) && $_GET['action'] == 'delete') {
+if (isset($_GET['action']) && $_GET['action'] == 'delete') {
 
 
     // Prepare to fetch product image
@@ -24,8 +24,8 @@ if (isset ($_GET['action']) && $_GET['action'] == 'delete') {
 $sql = "SELECT * FROM categories";
 $category = $conn->query($sql);
 
-$page = isset ($_GET['page']) ? (int) $_GET['page'] : 1;
-$items_per_page = 12;
+$page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+$items_per_page = 2;
 $offset = ($page - 1) * $items_per_page;
 ?>
 
@@ -44,7 +44,7 @@ $offset = ($page - 1) * $items_per_page;
                                 <th>Name</th>
                                 <th>Price</th>
                                 <th>Discount Price</th>
-                                <th>Discount category</th>
+                                <th>product category</th>
                                 <th><button class='btn btn-primary edit-btn'>add New</button></th>
                             </tr>
                         </thead>
@@ -91,7 +91,7 @@ $offset = ($page - 1) * $items_per_page;
                 $total_pages = ceil($row['total'] / $items_per_page);
 
                 for ($i = 1; $i <= $total_pages; $i++) {
-                    echo "<li class='page-item'><a class='page-link' href='../shop/merchandise.php?page=$i'>$i</a></li>";
+                    echo "<li class='page-item'><a class='page-link' href='../adminShop/merchandise.php?page=$i'>$i</a></li>";
                 }
                 ?>
             </ul>
@@ -206,39 +206,73 @@ $offset = ($page - 1) * $items_per_page;
             formData.append('price', $('#price').val());
             formData.append('Discount_price', $('#Discount_price').val());
 
+            var data = {
+                clubId: $('#product_name').val(),
+                name: $('#picture').val(),
+                location: $('#details').val(),
+                email: $('#product_type').val(),
+                panNumber: $('#price').val(),
+                aadharNumber: $('#Discount_price').val(),
+
+            };
             $.ajax({
                 url: "../adminShop/addProduct.php",
                 type: "POST",
                 data: formData,
                 contentType: false, // Necessity for FormData
                 processData: false, // Necessity for FormData
+                dataType: 'json', // Expect JSON response
                 success: function (response) {
                     console.log(response);
-                    $('#addMerchandise').modal('hide');
-                    location.reload();
+
+                    if (response.product) {
+                        var newRow = "<tr>" +
+                            "<td><img src='../images/product_images/" + response.product.product_image + "' style='width:50px; height:50px; border:groove #000'></td>" +
+                            "<td>" + response.product.product_title + "</td>" +
+                            "<td>" + response.product.product_price + "</td>" +
+                            "<td>" + response.product.Discount_price + "</td>" +
+                            "<td>" + response.product.cat_title + "</td>" +
+                            "<td><button class='btn btn-success delete-btn' data-delete-id='" + response.product.product_id + "'>Delete</button></td>" +
+                            "</tr>";
+
+                        $('#page1 tbody').append(newRow); // Assuming you have a tbody within your table
+                        $('#addMerchandise').modal('hide');
+
+                    } else if (response.error) {
+                        console.error("Error:", response.error);
+                    }
                 },
+                // console.log("🚀 ~ response:", response)
                 error: function (xhr, status, error) {
                     console.error("Error:", status, error);
                 }
             });
+
+
         });
     });
     $(document).ready(function () {
-        // Correctly handle the click event on dynamically added elements
         $('body').on('click', '.delete-btn', function () {
-            var product_id = $(this).data('delete-id');
+            var button = $(this); // Capture the button that was clicked
+            var product_id = button.data('delete-id'); // Get the product ID stored in the button
+            var row = button.closest('tr'); // Capture the row to be potentially removed
+
             // Confirm before deleting
-            if (confirm('Are you sure you want to delete this category?')) {
+            if (confirm('Are you sure you want to delete this product?')) {
                 $.ajax({
                     url: "../adminShop/deleteProduct.php",
                     type: "POST",
                     data: { product_id: product_id },
+                    dataType: 'json', // Expect JSON response
                     success: function (response) {
+                        console.log(response); // Log the response for debugging
                         if (response.success) {
-                            console.log(response.success);
-                            location.reload();
+                            row.fadeOut(400, function () {
+                                row.remove();
+                            });
                         } else {
-                            console.log(response.error);
+                            // Log the error or display it to the user
+                            alert("Failed to delete the product: " + response.error);
                         }
                     },
                     error: function (xhr, status, error) {
@@ -261,7 +295,7 @@ $offset = ($page - 1) * $items_per_page;
                 url: pageLink,
                 type: "GET",
                 success: function (response) {
-                    console.log(response)
+                    // console.log(response)
                     // Assuming 'response' is the HTML content you want to display
                     // Update the part of your page that shows the product list
                     // You might need to extract only the relevant part from 'response'
@@ -276,4 +310,5 @@ $offset = ($page - 1) * $items_per_page;
             });
         });
     });
+
 </script>

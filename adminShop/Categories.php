@@ -5,21 +5,23 @@ ini_set('display_errors', 1);
 require '../db_connection.php'; // Change 'include' to 'require' to ensure the script stops if the file is not found.
 
 // Add category
-if (isset ($_POST['add_category'])) {
+if (isset($_POST['add_category'])) {
     $category = $_POST['add_category'];
     $stmt = $conn->prepare("INSERT INTO categories (cat_title) VALUES (?)");
     $stmt->bind_param("s", $category);
     if ($stmt->execute()) {
-        echo json_encode(["success" => "Category added successfully."]);
+        $newCatId = $conn->insert_id;  // Get the ID of the newly added category
+        echo json_encode(["success" => "Category added successfully.", "id" => $newCatId, "title" => $category]);
     } else {
         echo json_encode(["error" => "Error adding category: " . $stmt->error]);
     }
+
     $stmt->close();
     exit();
 }
 
 // Delete category
-if (isset ($_POST['category_id'])) {
+if (isset($_POST['category_id'])) {
     $categoryId = $_POST['category_id'];
     $stmt = $conn->prepare("DELETE FROM categories WHERE cat_id = ?");
     $stmt->bind_param("i", $categoryId);
@@ -113,44 +115,55 @@ $conn->close();
                     });
 
                     $('#saveChangesBtn').click(function (e) {
-                        e.preventDefault(); // Prevent the default form submission
-
+                        e.preventDefault();  // Prevent form submission
                         var formData = new FormData();
                         formData.append('add_category', $('#add_category').val());
+
                         $.ajax({
                             url: "../adminShop/Categories.php",
                             type: "POST",
                             data: formData,
-                            contentType: false, // Necessity for FormData
-                            processData: false, // Necessity for FormData
+                            contentType: false,
+                            processData: false,
+                            dataType: 'json',
                             success: function (response) {
-                                console.log(response);
-                                $('#addCategory').modal('hide');
-                                location.reload();
+                                if (response.success) {
+                                    var newRow = `<tr>
+                                <td>${response.id}</td>
+                                <td>${response.title}</td>
+                                <td><button class='btn btn-success delete-btn' data-delete-id='${response.id}'>Delete</button></td>
+                              </tr>`;
+                                    $('#page1 tbody').append(newRow);
+                                    $('#addCategory').modal('hide');
+                                } else if (response.error) {
+                                    alert("Error: " + response.error);
+                                }
                             },
                             error: function (xhr, status, error) {
                                 console.error("Error:", status, error);
                             }
                         });
                     });
+
                 });
                 // Correctly handle the click event on dynamically added elements for deletion
                 $('body').on('click', '.delete-btn', function () {
-                    var categoryId = $(this).data('delete-id');
+                    var button = $(this);
+                    var categoryId = button.data('delete-id');
+                    var row = button.closest('tr');
+
                     if (confirm('Are you sure you want to delete this category?')) {
                         $.ajax({
-                            url: "../adminShop/Categories.php", // Make sure this URL is correct
+                            url: "../adminShop/Categories.php",
                             type: "POST",
                             data: { category_id: categoryId },
+                            dataType: 'json',
                             success: function (response) {
-                                console.log(response); // Debugging line
-                                let res = JSON.parse(response);
-                                if (res.success) {
-                                    console.log(res.success);
+                                if (response.success) {
+                                    row.fadeOut(400, function () { row.remove(); });
                                 } else {
-                                    console.log(res.error || "An unexpected error occurred");
+                                    alert("Failed to delete category: " + response.error);
                                 }
-                                location.reload();
                             },
                             error: function (xhr, status, error) {
                                 console.error("AJAX Error:", status, error);

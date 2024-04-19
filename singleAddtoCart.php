@@ -10,7 +10,7 @@ if (isset($_POST["singleaddToCart"])) {
     $quantity = $_POST['quantity'];
     $p_id = $_POST["proId"];
     $total_amount = $_POST["total_amount"];
-
+    $net_total = $total_amount * $quantity;
     if (isset($_SESSION["uid"])) {
 
         $user_id = $_SESSION["uid"];
@@ -24,7 +24,7 @@ if (isset($_POST["singleaddToCart"])) {
         } else {
             $sql = "INSERT INTO `cart`
 			(`p_id`, `ip_add`, `user_id`, `qty`,`Total_amount`) 
-			VALUES ('$p_id','$ip_add','$user_id','$quantity','$total_amount')";
+			VALUES ('$p_id','$ip_add','$user_id','$quantity','$net_total')";
             if (mysqli_query($conn, $sql)) {
                 echo json_encode(['success' => true, 'message' => 'Product is Added..!']);
                 exit();
@@ -40,7 +40,7 @@ if (isset($_POST["singleaddToCart"])) {
         }
         $sql = "INSERT INTO `cart`
 			(`p_id`, `ip_add`, `user_id`, `qty`,`Total_amount`) 
-			VALUES ('$p_id','$ip_add','-1','$quantity','$total_amount')";
+			VALUES ('$p_id','$ip_add','-1','$quantity','$net_total')";
         if (mysqli_query($conn, $sql)) {
             echo json_encode(['success' => true, 'message' => 'Product added to cart successfully!']);
             exit();

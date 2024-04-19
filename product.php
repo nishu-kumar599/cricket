@@ -214,7 +214,7 @@
 								
 							</div>
 							<div>
-								<h3 class="product-price">$' . $row['Discount_price'] . '<del class="product-old-price">' . $row['product_price'] . '</del></h3>
+								<h3 class="product-price">₹' . $row['Discount_price'] . '<del class="product-old-price">₹' . $row['product_price'] . '</del></h3>
 								<span class="product-available">In Stock</span>
 							</div>
 							<p class="product_description_cart">' . $row['product_desc'] . '</p>

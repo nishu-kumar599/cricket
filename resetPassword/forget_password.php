@@ -22,6 +22,7 @@ session_start();
         }
 
         .container {
+            width: 500px;
             background-color: #fff;
             padding: 20px;
             border-radius: 5px;
@@ -44,7 +45,7 @@ session_start();
         input[type="text"],
         input[type="email"],
         input[type="password"] {
-            width: 100%;
+            width: -webkit-fill-available;
             padding: 8px;
             border-radius: 5px;
             border: 1px solid #ccc;
@@ -71,6 +72,11 @@ session_start();
 
         .otp-field button {
             margin-top: 16px;
+        }
+
+        body {
+            background-image: url('../images/banner3.png');
+            background-size: cover;
         }
     </style>
 </head>

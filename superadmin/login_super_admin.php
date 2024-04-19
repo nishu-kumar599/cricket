@@ -18,7 +18,20 @@
             height: 100vh;
         }
 
+        body {
+            background-image: url('../images/banner3.png');
+            background-size: cover;
+        }
+
+        .newcontainer {
+            background-color: #fff;
+            padding: 20px 0px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
         .container {
+            width: 500px;
             background-color: #fff;
             padding: 20px;
             border-radius: 5px;
@@ -40,7 +53,7 @@
 
         input[type="text"],
         input[type="password"] {
-            width:100%;
+            width: -webkit-fill-available;
             padding: 8px;
             border-radius: 5px;
             border: 1px solid #ccc;
@@ -82,7 +95,7 @@
             </div>
             <button type="submit">Login</button>
         </form>
-        <div class="container" style="box-shadow:none">
+        <div class="newcontainer" style="box-shadow:none">
             <span class="psw">Forgot <a href="forget_password.php">password?</a></span>
         </div>
         <?php

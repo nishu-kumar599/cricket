@@ -1,7 +1,7 @@
 <?php
 session_start();
 // Include the CSRF token management script
-require("../csrf_token.php");
+require ("../csrf_token.php");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,7 +19,10 @@ require("../csrf_token.php");
         }
 
         .container {
-            background-color: rgba(255, 255, 255, 1); /* Semi-transparent background */
+            width: 500px;
+            margin: 50px auto;
+            background-color: rgba(255, 255, 255, 1);
+            /* Semi-transparent background */
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -43,7 +46,7 @@ require("../csrf_token.php");
 
         input[type="text"],
         input[type="password"] {
-            width: 100%;
+            width: -webkit-fill-available;
             padding: 8px;
             border-radius: 5px;
             border: 1px solid #ccc;

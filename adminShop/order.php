@@ -45,6 +45,7 @@ if ($results->num_rows > 0) {
                                     <th>Amount</th>
                                     <th>Transaction ID</th>
                                     <th>Payment Status</th>
+                                    <th>Delete</th>
                                 </tr>
                             </thead>
                             <tbody>';
@@ -63,11 +64,13 @@ if ($results->num_rows > 0) {
                                     <td>' . $row['amount'] . '</td>
                                     <td>' . $row['trx_id'] . '</td>
                                     <td>' . $row['p_status'] . '</td>
+                                    <td><button class="btn btn-danger delete-btn" data-id="' . $row['order_id'] . '">Delete</button></td>
                                 </tr>';
     }
     echo '
                             </tbody>
                         </table>
+                        <div id="pagination-container"></div>
                     </div>
                 </div>
             </div>
@@ -79,43 +82,70 @@ if ($results->num_rows > 0) {
 
 // Close the statement and the database connection
 $stmt->close();
-$conn->close();
-?>
 
+?>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script>
     $(document).ready(function () {
-        var rowsToShow = 5; // Number of rows to show per page
-        var totalRows = $('#data-table tbody tr').length; // Total rows in the table
-        var totalPages = Math.ceil(totalRows / rowsToShow); // Total pages needed
+        // Function to refresh the table and pagination
+        function refreshTableAndPagination() {
+            var rowsToShow = 1; // Adjust number of rows per page as needed
+            var totalRows = $('#data-table tbody tr').length; // Get total number of rows
+            var totalPages = Math.ceil(totalRows / rowsToShow); // Calculate total pages
 
-        // Function to display rows based on the page number
-        function displayRows(page) {
-            var start = (page - 1) * rowsToShow;
-            var end = start + rowsToShow;
-
-            $('#data-table tbody tr').hide().slice(start, end).show();
-        }
-
-        // Initialize the table with the first page
-        displayRows(1);
-
-        // Function to generate pagination controls
-        function setupPagination(totalPages) {
-            for (var i = 1; i <= totalPages; i++) {
-                $('#pagination-container').append($('<a href="#" class="page-link">').text(i));
+            function displayRows(page) {
+                var start = (page - 1) * rowsToShow;
+                var end = start + rowsToShow;
+                $('#data-table tbody tr').hide().slice(start, end).show(); // Hide all rows and only show for the current page
             }
 
-            // Add click event for pagination controls
+            // Clear and recreate pagination links
+            $('#pagination-container').empty();
+            for (var i = 1; i <= totalPages; i++) {
+                var link = $('<a href="#" class="page-link">').text(i);
+                $('#pagination-container').append(link);
+            }
+
             $('.page-link').on('click', function (e) {
                 e.preventDefault();
                 var page = parseInt($(this).text());
                 displayRows(page);
             });
+
+            displayRows(1); // Show the first page
         }
 
-        // Generate pagination controls
-        setupPagination(totalPages);
+        refreshTableAndPagination(); // Initial call to set up pagination
+
+        $('#data-table').on('click', '.delete-btn', function () {
+            var button = $(this); // Get the button that was clicked
+            var orderId = button.data('id'); // Extract order ID from data-id attribute
+            var row = button.closest('tr'); // Find the closest tr parent to remove later
+
+            if (confirm('Are you sure you want to delete this order?')) {
+                $.ajax({
+                    url: '../adminShop/deleteProduct.php', // Correct server-side script to handle deletion
+                    type: 'POST',
+                    data: { order_id: orderId },
+                    success: function (response) {
+                        var data = JSON.parse(response);
+                        if (data.success) {
+                            row.fadeOut(400, function () {
+                                $(this).remove(); // Remove the row from the DOM
+                                refreshTableAndPagination(); // Refresh table and pagination after deletion
+                            });
+                            alert('Order deleted successfully');
+                        } else {
+                            alert('Error deleting order: ' + data.error);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error:", status, error);
+                        alert('Failed to delete order');
+                    }
+                });
+            }
+        });
     });
 </script>

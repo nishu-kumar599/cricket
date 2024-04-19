@@ -2,40 +2,60 @@
 // Include the database connection file
 include '../db_connection.php';
 
-// Check if the form was submitted
-print_r($_POST);
-// Collect POST data and ensure it's properly escaped to prevent SQL injection
-$id = $_POST['playerId'];
-$name = $_POST['name'];
-$age = $_POST['age'];
-$email = $_POST['email'];
-$mobile = $_POST['mobile'];
-$type = $_POST['type'];
-$state = $_POST['state'];
-$city = $_POST['city'];
-$address = $_POST['address'];
-$club = $_POST['club'];
+// Check if all required fields are provided
+if (
+    isset(
+    $_POST['playerId'],
+    $_POST['name'],
+    $_POST['age'],
+    $_POST['dob'],
+    $_POST['email'],
+    $_POST['mobile'],
+    $_POST['type'],
+    $_POST['state'],
+    $_POST['city'],
+    $_POST['address'],
+    $_POST['club']
+)
+) {
+    // Sanitize input data to prevent SQL injection
+    $id = mysqli_real_escape_string($conn, $_POST['playerId']);
+    $name = mysqli_real_escape_string($conn, $_POST['name']);
+    $age = intval($_POST['age']);
+    $dob = mysqli_real_escape_string($conn, $_POST['dob']);
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $mobile = mysqli_real_escape_string($conn, $_POST['mobile']);
+    $type = mysqli_real_escape_string($conn, $_POST['type']);
+    $state = mysqli_real_escape_string($conn, $_POST['state']);
+    $city = mysqli_real_escape_string($conn, $_POST['city']);
+    $address = mysqli_real_escape_string($conn, $_POST['address']);
+    $club = intval($_POST['club']);
 
-// Prepare the UPDATE statement
-$sql = "UPDATE players SET name=?, age=?, email=?, mobile=?, type=?, state=?, city=?, address=?, club_id=? WHERE player_id=?";
-$stmt = $conn->prepare($sql);
+    // Prepare the UPDATE statement
+    $sql = "UPDATE players SET name=?, age=?, dob=?, email=?, mobile=?, type=?, state=?, city=?, address=?, club_id=? WHERE player_id=?";
+    $stmt = $conn->prepare($sql);
 
-if ($stmt === false) {
-    die ("Error preparing statement: " . $conn->error);
-}
+    if ($stmt === false) {
+        die("Error preparing statement: " . $conn->error);
+    }
 
-// Bind parameters and execute
-// Ensure your types are correct: i for integer, s for string, d for double, b for blob
-$stmt->bind_param("sissssssis", $name, $age, $email, $mobile, $type, $state, $city, $address, $club, $id);
+    // Bind parameters
+    $stmt->bind_param("sisssssssis", $name, $age, $dob, $email, $mobile, $type, $state, $city, $address, $club, $id);
 
-if ($stmt->execute()) {
-    echo "Record updated successfully";
+    // Execute the statement
+    if ($stmt->execute()) {
+        echo "Record updated successfully";
+    } else {
+        echo "Error updating record: " . $stmt->error;
+    }
+
+    // Close statement
+    $stmt->close();
 } else {
-    echo "Error updating record: " . $stmt->error;
+    // If any required field is missing, return an error message
+    echo "Error: Missing required fields.";
 }
 
-// Close statement and connection
-$stmt->close();
+// Close connection
 $conn->close();
-
 ?>
