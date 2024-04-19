@@ -119,7 +119,7 @@ session_start();
             //click event for the editor tab
             $("#editorTab").click(function (e) {
                 e.preventDefault();
-                loadorderContent();
+                loadblogContent();
             });
             // Function to load the clubs content
             function loadClubsContent() {
@@ -149,7 +149,7 @@ session_start();
                 $("#mainContent").load("../adminShop/order.php");
             }
             // Function to load the blog content
-            function loadorderContent() {
+            function loadblogContent() {
                 // Load the content from order.php into the mainContent container
                 $("#mainContent").load("../adminShop/blog.php");
             }

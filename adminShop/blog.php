@@ -269,24 +269,24 @@ $conn->close();
                     var id = button.data('delete-id');
                     var row = button.closest('tr');
 
-                    if (confirm('Are you sure you want to delete this category?')) {
-                        $.ajax({
-                            url: "../adminShop/blog.php",
-                            type: "POST",
-                            data: { id: id },
-                            dataType: 'json',
-                            success: function (response) {
-                                if (response.success) {
-                                    row.fadeOut(400, function () { row.remove(); });
-                                    setupPagination();
-                                } else {
-                                    alert("Failed to delete category: " + response.error);
-                                }
-                            },
-                            error: function (xhr, status, error) {
-                                console.error("AJAX Error:", status, error);
+
+                    $.ajax({
+                        url: "../adminShop/blog.php",
+                        type: "POST",
+                        data: { id: id },
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.success) {
+                                row.fadeOut(400, function () { row.remove(); });
+                                setupPagination();
+                            } else {
+                                alert("Failed to delete category: " + response.error);
                             }
-                        });
-                    }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("AJAX Error:", status, error);
+                        }
+                    });
+
                 });
             </script>

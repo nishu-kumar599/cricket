@@ -123,29 +123,29 @@ $stmt->close();
             var orderId = button.data('id'); // Extract order ID from data-id attribute
             var row = button.closest('tr'); // Find the closest tr parent to remove later
 
-            if (confirm('Are you sure you want to delete this order?')) {
-                $.ajax({
-                    url: '../adminShop/deleteProduct.php', // Correct server-side script to handle deletion
-                    type: 'POST',
-                    data: { order_id: orderId },
-                    success: function (response) {
-                        var data = JSON.parse(response);
-                        if (data.success) {
-                            row.fadeOut(400, function () {
-                                $(this).remove(); // Remove the row from the DOM
-                                refreshTableAndPagination(); // Refresh table and pagination after deletion
-                            });
-                            alert('Order deleted successfully');
-                        } else {
-                            alert('Error deleting order: ' + data.error);
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error:", status, error);
-                        alert('Failed to delete order');
+            // if (confirm('Are you sure you want to delete this order?')) {
+            $.ajax({
+                url: '../adminShop/deleteProduct.php', // Correct server-side script to handle deletion
+                type: 'POST',
+                data: { order_id: orderId },
+                success: function (response) {
+                    var data = JSON.parse(response);
+                    if (data.success) {
+                        row.fadeOut(400, function () {
+                            $(this).remove(); // Remove the row from the DOM
+                            refreshTableAndPagination(); // Refresh table and pagination after deletion
+                        });
+                        alert('Order deleted successfully');
+                    } else {
+                        alert('Error deleting order: ' + data.error);
                     }
-                });
-            }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error:", status, error);
+                    alert('Failed to delete order');
+                }
+            });
+            // }
         });
     });
 </script>

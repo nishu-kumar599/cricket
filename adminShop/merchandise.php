@@ -258,28 +258,28 @@ $offset = ($page - 1) * $items_per_page;
             var row = button.closest('tr'); // Capture the row to be potentially removed
 
             // Confirm before deleting
-            if (confirm('Are you sure you want to delete this product?')) {
-                $.ajax({
-                    url: "../adminShop/deleteProduct.php",
-                    type: "POST",
-                    data: { product_id: product_id },
-                    dataType: 'json', // Expect JSON response
-                    success: function (response) {
-                        console.log(response); // Log the response for debugging
-                        if (response.success) {
-                            row.fadeOut(400, function () {
-                                row.remove();
-                            });
-                        } else {
-                            // Log the error or display it to the user
-                            alert("Failed to delete the product: " + response.error);
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error:", status, error);
+            // if (confirm('Are you sure you want to delete this product?')) {
+            $.ajax({
+                url: "../adminShop/deleteProduct.php",
+                type: "POST",
+                data: { product_id: product_id },
+                dataType: 'json', // Expect JSON response
+                success: function (response) {
+                    console.log(response); // Log the response for debugging
+                    if (response.success) {
+                        row.fadeOut(400, function () {
+                            row.remove();
+                        });
+                    } else {
+                        // Log the error or display it to the user
+                        alert("Failed to delete the product: " + response.error);
                     }
-                });
-            }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error:", status, error);
+                }
+            });
+            // }
         });
     });
 

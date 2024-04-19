@@ -152,24 +152,24 @@ $conn->close();
                     var categoryId = button.data('delete-id');
                     var row = button.closest('tr');
 
-                    if (confirm('Are you sure you want to delete this category?')) {
-                        $.ajax({
-                            url: "../adminShop/Categories.php",
-                            type: "POST",
-                            data: { category_id: categoryId },
-                            dataType: 'json',
-                            success: function (response) {
-                                if (response.success) {
-                                    row.fadeOut(400, function () { row.remove(); });
-                                } else {
-                                    alert("Failed to delete category: " + response.error);
-                                }
-                            },
-                            error: function (xhr, status, error) {
-                                console.error("AJAX Error:", status, error);
+                    // if (confirm('Are you sure you want to delete this category?')) {
+                    $.ajax({
+                        url: "../adminShop/Categories.php",
+                        type: "POST",
+                        data: { category_id: categoryId },
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.success) {
+                                row.fadeOut(400, function () { row.remove(); });
+                            } else {
+                                alert("Failed to delete category: " + response.error);
                             }
-                        });
-                    }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("AJAX Error:", status, error);
+                        }
+                    });
+                    // }
                 });
                 // });
             </script>
