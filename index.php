@@ -407,7 +407,7 @@
       <!--Shop Products End-->
 
       <!--League Players Squad Start-->
-      <section class="wf100 p0-80 players-squad portfolio filter-gallery">
+      <!-- <section class="wf100 p0-80 players-squad portfolio filter-gallery">
         <div class="container">
           <div class="row">
             <div class="col-md-6">
@@ -471,7 +471,7 @@
             </div>
           </div>
         </div>
-      </section>
+      </section> -->
       <!--League Players Squad End-->
 
       <!--Sponsor Logos Start-->

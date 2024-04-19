@@ -30,7 +30,7 @@
               <li class="nav-item drop-down"> <a href="index.php">Home</a>
 
               </li>
-              <li class="nav-item drop-down"> <a href="">Matches</a>
+              <!-- <li class="nav-item drop-down"> <a href="">Matches</a>
                 <ul>
                   <li><a href="upcoming-match.html">Upcoming Match</a></li>
                   <li><a href="match-resut-layout-1.html">Match Result One</a></li>
@@ -38,9 +38,9 @@
                   <li><a href="match-resut-layout-3.html">Match Result Three</a></li>
                   <li><a href="match-details.html">Match Details</a></li>
                 </ul>
-              </li>
-              <li class="nav-item drop-down"> <a href="">Features</a>
-                <ul>
+              </li> -->
+              <li class="nav-item drop-down"> <a href="store.php">store</a>
+                <!-- <ul>
                   <li class="drop-down"> <a href="#">Shop</a>
                     <ul>
                       <li><a href="store.php">Store</a></li>
@@ -59,12 +59,12 @@
                   <li><a href="groups.html">Groups</a></li>
                   <li><a href="page-404.html">Page 404</a></li>
                   <li><a href="page-404-one.html">Page 404 Two</a></li>
-                </ul>
+                </ul> -->
               </li>
-              <li class="nav-item drop-down"> <a href="news.php">News</a>
+              <li class="nav-item drop-down"> <a href="cart.php">cart</a>
 
               </li>
-              <li class="nav-item drop-down"> <a href="">Fixtures</a>
+              <li class="nav-item drop-down"> <a href="news.php">News</a>
 
               </li>
 
